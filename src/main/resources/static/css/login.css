@@ -1,0 +1,416 @@
+/* =============================================
+   LOGIN PAGE STYLES
+   Hệ thống Quản lý Nội trú
+   ============================================= */
+
+/* ===== Reset & Base ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    background-color: #f4f6f9;
+    color: #111827;
+}
+
+/* ===== Split-screen Layout ===== */
+.page-wrapper {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+/* --- Panel trái: Thương hiệu --- */
+.brand-panel {
+    flex: 1;
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    text-align: center;
+    position: relative;
+}
+
+.brand-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+            radial-gradient(circle at 20% 30%, rgba(255,255,255,0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(255,255,255,0.08) 0%, transparent 50%);
+}
+
+.brand-panel > * {
+    position: relative;
+    z-index: 1;
+}
+
+.brand-panel .logo {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.brand-panel h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+}
+
+.brand-panel p {
+    font-size: 1.05rem;
+    opacity: 0.9;
+    max-width: 420px;
+    line-height: 1.6;
+}
+
+.brand-panel .features {
+    margin-top: 2.5rem;
+    text-align: left;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.brand-panel .features li {
+    list-style: none;
+    margin-bottom: 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+}
+
+.brand-panel .features li:last-child {
+    margin-bottom: 0;
+}
+
+/* --- Panel phải: Form đăng nhập --- */
+.login-panel {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+}
+
+.login-header {
+    margin-bottom: 1.8rem;
+}
+
+.login-header h2 {
+    font-size: 1.7rem;
+    color: #111827;
+    margin-bottom: 0.4rem;
+}
+
+.login-header p {
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+/* ===== Alert thông báo ===== */
+.alert-error {
+    background-color: #fef2f2;
+    border-left: 4px solid #ef4444;
+    color: #991b1b;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.alert-error i {
+    color: #ef4444;
+}
+
+.alert-error.alert-info {
+    background-color: #eff6ff;
+    border-left-color: #3b82f6;
+    color: #1e40af;
+}
+
+.alert-error.alert-info i {
+    color: #3b82f6;
+}
+
+/* ===== Form ===== */
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-group label,
+.role-label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.input-wrapper,
+.pwd-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper i,
+.pwd-wrapper > i.fa-lock {
+    position: absolute;
+    left: 14px;
+    color: #9ca3af;
+    font-size: 1rem;
+    pointer-events: none;
+}
+
+.input-wrapper input,
+.pwd-wrapper input {
+    width: 100%;
+    padding: 11px 14px 11px 42px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #111827;
+    background-color: #f9fafb;
+    transition: all 0.2s ease;
+}
+
+.input-wrapper input:focus,
+.pwd-wrapper input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.toggle-pwd {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.2s;
+}
+
+.toggle-pwd:hover {
+    color: #3b82f6;
+}
+
+/* ===== Chọn vai trò ===== */
+.role-selector {
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 1.2rem;
+}
+
+.role-option {
+    flex: 1;
+    position: relative;
+}
+
+.role-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.role-option label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 0.8rem 0.5rem;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background-color: #f9fafb;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.role-option label i {
+    font-size: 1.3rem;
+    color: #6b7280;
+    transition: color 0.2s;
+}
+
+.role-option input[type="radio"]:checked + label {
+    border-color: #3b82f6;
+    background-color: #eff6ff;
+    color: #1d4ed8;
+}
+
+.role-option input[type="radio"]:checked + label i {
+    color: #2563eb;
+}
+
+.role-option label:hover {
+    border-color: #9ca3af;
+}
+
+/* ===== Quên mật khẩu ===== */
+.forgot-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.2rem;
+}
+
+.forgot-row a {
+    font-size: 0.88rem;
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.forgot-row a:hover {
+    text-decoration: underline;
+}
+
+/* ===== Nút Đăng nhập ===== */
+.btn-login {
+    width: 100%;
+    padding: 11px;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.98rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-login:hover {
+    background-color: #1d4ed8;
+}
+
+.btn-login:active {
+    transform: scale(0.98);
+}
+
+/* ===== Divider ===== */
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 1.2rem 0;
+    color: #9ca3af;
+    font-size: 0.85rem;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: #e5e7eb;
+}
+
+/* ===== Nút Google ===== */
+.btn-google {
+    width: 100%;
+    padding: 10px;
+    background-color: #ffffff;
+    color: #374151;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-google:hover {
+    background-color: #f9fafb;
+    border-color: #9ca3af;
+}
+
+.btn-google img {
+    width: 18px;
+    height: 18px;
+}
+
+/* ===== Footer / Liên hệ ===== */
+.signup-row {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.88rem;
+    color: #6b7280;
+    background-color: #f3f4f6;
+    padding: 0.9rem;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+}
+
+.signup-row i {
+    color: #3b82f6;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+    body {
+        overflow-y: auto;
+        height: auto;
+    }
+    .page-wrapper {
+        flex-direction: column;
+    }
+    .brand-panel {
+        padding: 2rem 1.5rem;
+        min-height: auto;
+    }
+    .brand-panel .features {
+        display: none;
+    }
+    .brand-panel h1 {
+        font-size: 1.6rem;
+    }
+    .brand-panel .logo {
+        font-size: 3rem;
+    }
+    .login-panel {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-header h2 {
+        font-size: 1.4rem;
+    }
+    .role-selector {
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,36 @@
+<div th:fragment="toastBundle" xmlns:th="http://www.thymeleaf.org">
+
+    <div th:if="${successMessage}"
+         data-toast="success"
+         th:data-msg="${successMessage}"
+         style="display:none"></div>
+
+    <div th:if="${errorMessage}"
+         data-toast="error"
+         th:data-msg="${errorMessage}"
+         style="display:none"></div>
+
+    <div th:if="${warningMessage}"
+         data-toast="warning"
+         th:data-msg="${warningMessage}"
+         style="display:none"></div>
+
+    <div th:if="${infoMessage}"
+         data-toast="info"
+         th:data-msg="${infoMessage}"
+         style="display:none"></div>
+
+    <div th:if="${success}"
+         data-toast="success"
+         th:data-msg="${success}"
+         style="display:none"></div>
+
+    <div th:if="${error}"
+         data-toast="error"
+         th:data-msg="${error}"
+         style="display:none"></div>
+
+    <link rel="stylesheet" th:href="@{/css/toast.css}">
+    <script th:src="@{/js/toast.js}"></script>
+
+</div>
