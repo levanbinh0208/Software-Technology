@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.residential_management.mapper.StudentMapper">
+
+    <resultMap id="StudentResultMap"
+               type="com.example.residential_management.entity.Student">
+
+        <id column="StudentId" property="studentId"/>
+        <result column="StudentCode" property="studentCode"/>
+        <result column="FullName" property="fullName"/>
+        <result column="Gender" property="gender"/>
+        <result column="DateOfBirth" property="dateOfBirth"/>
+        <result column="ClassId" property="classId"/>
+        <result column="ClassName" property="className"/>
+        <result column="Hometown" property="hometown"/>
+        <result column="ParentName" property="parentName"/>
+        <result column="ParentPhone" property="parentPhone"/>
+        <result column="BoardingStatus" property="boardingStatus"/>
+        <result column="UserId" property="userId"/>
+        <result column="CreatedAt" property="createdAt"/>
+        <result column="UpdatedAt" property="updatedAt"/>
+
+    </resultMap>
+
+    <!-- Danh sách học sinh và bộ lọc -->
+    <select id="findAll" resultMap="StudentResultMap">
+
+        SELECT
+        s.StudentId,
+        s.StudentCode,
+        s.FullName,
+        s.Gender,
+        s.DateOfBirth,
+        s.ClassId,
+        c.ClassName,
+        s.Hometown,
+        s.ParentName,
+        s.ParentPhone,
+        s.BoardingStatus,
+        s.UserId,
+        s.CreatedAt,
+        s.UpdatedAt
+        FROM Students s
+        INNER JOIN Classes c ON s.ClassId = c.ClassId
+
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (
+                s.StudentCode LIKE '%' + #{keyword} + '%'
+                OR s.FullName LIKE N'%' + #{keyword} + '%'
+                )
+            </if>
+
+            <if test="classId != null">
+                AND s.ClassId = #{classId}
+            </if>
+
+            <if test="boardingStatus != null and boardingStatus != ''">
+                AND s.BoardingStatus = #{boardingStatus}
+            </if>
+        </where>
+
+        ORDER BY s.StudentId DESC
+
+    </select>
+
+    <!-- Chi tiết học sinh -->
+    <select id="findById" resultMap="StudentResultMap">
+        SELECT
+            s.StudentId,
+            s.StudentCode,
+            s.FullName,
+            s.Gender,
+            s.DateOfBirth,
+            s.ClassId,
+            c.ClassName,
+            s.Hometown,
+            s.ParentName,
+            s.ParentPhone,
+            s.BoardingStatus,
+            s.UserId,
+            s.CreatedAt,
+            s.UpdatedAt
+        FROM Students s
+                 INNER JOIN Classes c ON s.ClassId = c.ClassId
+        WHERE s.StudentId = #{studentId}
+    </select>
+
+    <!-- Kiểm tra trùng mã học sinh -->
+    <select id="existsByStudentCode" resultType="int">
+
+        SELECT COUNT(1)
+        FROM Students
+        WHERE StudentCode = #{studentCode}
+
+        <if test="studentId != null">
+            AND StudentId != #{studentId}
+        </if>
+
+    </select>
+
+    <!-- Thêm học sinh -->
+    <insert id="insert"
+            parameterType="com.example.residential_management.entity.Student"
+            useGeneratedKeys="true"
+            keyProperty="studentId"
+            keyColumn="StudentId">
+
+        INSERT INTO Students (
+            StudentCode,
+            FullName,
+            Gender,
+            DateOfBirth,
+            ClassId,
+            Hometown,
+            ParentName,
+            ParentPhone,
+            BoardingStatus
+        )
+        VALUES (
+                   #{studentCode},
+                   #{fullName},
+                   #{gender},
+                   #{dateOfBirth},
+                   #{classId},
+                   #{hometown},
+                   #{parentName},
+                   #{parentPhone},
+                   #{boardingStatus}
+               )
+
+    </insert>
+
+    <!-- Cập nhật học sinh -->
+    <update id="update" parameterType="com.example.residential_management.entity.Student">
+
+        UPDATE Students
+        SET
+            StudentCode = #{studentCode},
+            FullName = #{fullName},
+            Gender = #{gender},
+            DateOfBirth = #{dateOfBirth},
+            ClassId = #{classId},
+            Hometown = #{hometown},
+            ParentName = #{parentName},
+            ParentPhone = #{parentPhone},
+            BoardingStatus = #{boardingStatus},
+            UpdatedAt = SYSDATETIME()
+        WHERE StudentId = #{studentId}
+
+    </update>
+
+    <!-- Xóa học sinh -->
+    <delete id="deleteById">
+        DELETE FROM Students
+        WHERE StudentId = #{studentId}
+    </delete>
+
+
+    <!-- 5 học sinh mới nhất trên Dashboard -->
+    <select id="findRecentStudents"
+            resultMap="StudentResultMap">
+
+        SELECT *
+        FROM Students s
+                 INNER JOIN Classes c ON s.ClassId = c.ClassId
+        ORDER BY s.StudentId DESC
+
+    </select>
+
+    <!-- Tổng số học sinh -->
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*)
+        FROM Students
+    </select>
+
+    <!-- Tổng số học sinh theo trạng thái -->
+    <select id="countByBoardingStatus" resultType="int">
+        SELECT COUNT(*)
+        FROM Students
+        WHERE BoardingStatus = #{status}
+    </select>
+
+</mapper>

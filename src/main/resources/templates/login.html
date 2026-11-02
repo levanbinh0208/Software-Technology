@@ -3,133 +3,272 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Đăng nhập - Hệ thống Quản lý Nội trú</title>
 
-    <!-- CSS riêng -->
+    <!-- CSS -->
     <link rel="stylesheet" th:href="@{/css/login.css}">
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
 
 <div class="page-wrapper">
-    <!-- ===== Panel trái: Thương hiệu ===== -->
+
+    <!-- ================= PANEL TRÁI ================= -->
     <div class="brand-panel">
-        <div class="logo"><i class="fas fa-school"></i></div>
+
+        <div class="logo">
+            <i class="fas fa-school"></i>
+        </div>
+
         <h1>Quản lý Nội trú</h1>
-        <p>Hệ thống quản lý tập trung, minh bạch và hiệu quả dành cho học sinh nội trú và quản sinh.</p>
+
+        <p>
+            Hệ thống quản lý tập trung, minh bạch và hiệu quả
+            dành cho học sinh nội trú và quản sinh.
+        </p>
 
         <ul class="features">
-            <li><i class="fas fa-check-circle"></i> Quản lý hồ sơ và phòng ở chính xác</li>
-            <li><i class="fas fa-check-circle"></i> Theo dõi tình hình học tập theo kỳ</li>
-            <li><i class="fas fa-check-circle"></i> Xếp phòng tự động & thống kê báo cáo</li>
+            <li>
+                <i class="fas fa-check-circle"></i>
+                Quản lý hồ sơ và phòng ở chính xác
+            </li>
+
+            <li>
+                <i class="fas fa-check-circle"></i>
+                Theo dõi tình hình học tập theo kỳ
+            </li>
+
+            <li>
+                <i class="fas fa-check-circle"></i>
+                Xếp phòng tự động & thống kê báo cáo
+            </li>
         </ul>
+
     </div>
 
-    <!-- ===== Panel phải: Form đăng nhập ===== -->
+
+    <!-- ================= PANEL PHẢI ================= -->
     <div class="login-panel">
+
         <div class="login-card">
+
+            <!-- Tiêu đề -->
             <div class="login-header">
-                <h2>Chào mừng quay trở lại </h2>
-                <p>Vui lòng đăng nhập để tiếp tục sử dụng hệ thống.</p>
+                <h2>Chào mừng quay trở lại</h2>
+
+                <p>
+                    Vui lòng đăng nhập để tiếp tục sử dụng hệ thống.
+                </p>
             </div>
 
-            <!-- Thông báo lỗi từ server -->
-            <div class="alert-error" th:if="${param.error}">
+
+            <!-- ================= THÔNG BÁO LỖI ================= -->
+            <div class="alert-error"
+                 id="login-error"
+                 role="alert"
+                 style="display: none;">
+
                 <i class="fas fa-exclamation-circle"></i>
-                <span th:text="${param.error == 'credentials'
-                    ? 'Tên đăng nhập hoặc mật khẩu không đúng.'
-                    : (param.error == 'locked'
-                        ? 'Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên.'
-                        : 'Đăng nhập thất bại. Vui lòng thử lại.')}">
-                    Đăng nhập thất bại.
-                </span>
-            </div>
-            <div class="alert-error alert-info" th:if="${param.logout}">
-                <i class="fas fa-info-circle"></i>
-                <span>Bạn đã đăng xuất thành công.</span>
+
+                <span id="login-error-message"></span>
+
             </div>
 
-            <!-- Form đăng nhập -->
-            <form th:action="@{/login}" method="post" id="login-form">
+
+            <!-- ================= THÔNG BÁO THÀNH CÔNG ================= -->
+            <div class="alert-info"
+                 id="login-success"
+                 role="status"
+                 style="display: none;">
+
+                <i class="fas fa-check-circle"></i>
+
+                <span id="login-success-message"></span>
+
+            </div>
+
+
+            <!-- ================= FORM ĐĂNG NHẬP JWT ================= -->
+            <form id="login-form">
+
                 <!-- Chọn vai trò -->
-                <label class="role-label">Bạn là:</label>
-                <div class="role-selector">
+                <fieldset class="role-selector">
+
+                    <legend class="role-label">
+                        Bạn là:
+                    </legend>
+
                     <div class="role-option">
-                        <input type="radio" id="role-admin" name="role" value="QuanLyNoiTru" checked>
+
+                        <input type="radio"
+                               id="role-admin"
+                               name="role"
+                               value="ADMIN"
+                               checked
+                               required>
+
                         <label for="role-admin">
                             <i class="fas fa-user-shield"></i>
                             <span>Quản lý nội trú</span>
                         </label>
+
                     </div>
+
+
                     <div class="role-option">
-                        <input type="radio" id="role-student" name="role" value="HocSinh">
+
+                        <input type="radio"
+                               id="role-student"
+                               name="role"
+                               value="STUDENT">
+
                         <label for="role-student">
                             <i class="fas fa-user-graduate"></i>
                             <span>Học sinh</span>
                         </label>
-                    </div>
-                </div>
 
-                <!-- Tên đăng nhập -->
+                    </div>
+
+                </fieldset>
+
+
+                <!-- Username -->
                 <div class="form-group">
-                    <label for="username">Tên đăng nhập</label>
+
+                    <label for="username">
+                        Tên đăng nhập
+                    </label>
+
                     <div class="input-wrapper">
+
                         <i class="fas fa-user"></i>
-                        <input type="text" id="username" name="username"
+
+                        <input type="text"
+                               id="username"
+                               name="username"
                                placeholder="Nhập tên đăng nhập hoặc mã học sinh"
-                               required autofocus autocomplete="username">
+                               required
+                               autofocus
+                               autocomplete="username">
+
                     </div>
+
                 </div>
 
-                <!-- Mật khẩu -->
+
+                <!-- Password -->
                 <div class="form-group">
-                    <label for="password">Mật khẩu</label>
+
+                    <label for="password">
+                        Mật khẩu
+                    </label>
+
                     <div class="pwd-wrapper">
+
                         <i class="fas fa-lock"></i>
-                        <input type="password" id="password" name="password"
+
+                        <input type="password"
+                               id="password"
+                               name="password"
                                placeholder="Nhập mật khẩu"
-                               required autocomplete="current-password">
-                        <button type="button" class="toggle-pwd" id="toggle-pwd-btn" aria-label="Hiện/ẩn mật khẩu">
-                            <i class="fas fa-eye" id="eye-icon"></i>
+                               required
+                               autocomplete="current-password">
+
+                        <button type="button"
+                                class="toggle-pwd"
+                                id="toggle-pwd-btn"
+                                aria-label="Hiện hoặc ẩn mật khẩu">
+
+                            <i class="fas fa-eye"
+                               id="eye-icon"></i>
+
                         </button>
+
                     </div>
+
                 </div>
 
+
+                <!-- Quên mật khẩu -->
                 <div class="forgot-row">
-                    <a th:href="@{/forgot-password}">Quên mật khẩu?</a>
+
+                    <a th:href="@{/forgot-password}">
+                        Quên mật khẩu?
+                    </a>
+
                 </div>
 
-                <button type="submit" class="btn-login">
-                    <i class="fas fa-sign-in-alt"></i> Đăng nhập
+
+                <!-- Nút đăng nhập -->
+                <button type="submit"
+                        class="btn-login"
+                        id="btn-login">
+
+                    <i class="fas fa-sign-in-alt"></i>
+
+                    <span>Đăng nhập</span>
+
                 </button>
+
             </form>
 
-            <!-- Divider -->
-            <div class="divider">HOẶC</div>
 
-            <!-- Đăng nhập Google -->
-            <form th:action="@{/oauth2/authorization/google}" method="get">
-                <button type="submit" class="btn-google">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-                    Đăng nhập với Google
-                </button>
-            </form>
-
-            <!-- Thông báo liên hệ -->
-            <div class="signup-row">
-                <i class="fas fa-info-circle"></i>
-                Chưa có tài khoản? Vui lòng liên hệ <strong>Quản lý nội trú</strong> hoặc <strong>Phòng Công tác học sinh</strong> để được cấp quyền.
+            <!-- ================= GOOGLE LOGIN ================= -->
+            <div class="divider">
+                HOẶC
             </div>
+
+            <form th:action="@{/oauth2/authorization/google}"
+                  method="get">
+
+                <button type="submit"
+                        class="btn-google">
+
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                         alt="Google">
+
+                    Đăng nhập với Google
+
+                </button>
+
+            </form>
+
+
+            <!-- ================= LIÊN HỆ ================= -->
+            <div class="signup-row">
+
+                <i class="fas fa-info-circle"></i>
+
+                Chưa có tài khoản? Vui lòng liên hệ
+
+                <strong>Quản lý nội trú</strong>
+
+                hoặc
+
+                <strong>Phòng Công tác học sinh</strong>
+
+                để được cấp quyền.
+
+            </div>
+
         </div>
+
     </div>
+
 </div>
 
-<!-- Fragment toast thông báo -->
+
+<!-- Toast -->
 <div th:replace="~{fragments/toast :: toastBundle}"></div>
 
-<!-- JS riêng -->
+
+<!-- JavaScript đăng nhập JWT -->
 <script th:src="@{/js/login.js}"></script>
+
 </body>
 </html>

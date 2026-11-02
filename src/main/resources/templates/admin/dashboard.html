@@ -3,80 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Admin Dashboard - PhoneStore</title>
+    <title>Admin Dashboard - Quản lý nội trú</title>
+
     <link rel="stylesheet" th:href="@{/css/admin.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
+
 <div class="admin-container">
     <aside class="sidebar">
-        <div class="logo"><h2>📱 PhoneStore</h2></div>
+
+        <div class="logo">
+            <h2><i class="fas fa-school"></i> Quản lý nội trú</h2>
+        </div>
+
         <nav>
             <ul>
-                <li><a th:href="@{/admin/dashboard}" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a th:href="@{/admin/products}"><i class="fas fa-box"></i> Sản phẩm</a></li>
-                <li><a th:href="@{/admin/users}"><i class="fas fa-users"></i> Khách hàng</a></li>
-                <li><a th:href="@{/admin/orders}"><i class="fas fa-shopping-cart"></i> Đơn hàng</a></li>
-                <li><a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+                <li>
+                    <a th:href="@{/admin/dashboard}" class="active">
+                        <i class="fas fa-home"></i>
+                        Dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/admin/students}">
+                        <i class="fas fa-user-graduate"></i>
+                        Quản lý học sinh
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/admin/classes}">
+                        <i class="fas fa-chalkboard"></i>
+                        Quản lý lớp học
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/admin/accounts}">
+                        <i class="fas fa-users"></i>
+                        Quản lý tài khoản
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/logout}">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Đăng xuất
+                    </a>
+                </li>
             </ul>
         </nav>
+
     </aside>
 
+    <!-- MAIN CONTENT -->
     <main class="main-content">
+
+        <!-- TOPBAR -->
         <header class="topbar">
             <h1>Dashboard</h1>
-            <div class="user-info">Xin chào, <strong th:text="${fullName}"></strong></div>
+
+            <div class="user-info">
+                Xin chào,
+                <strong th:text="${fullName}">Quản trị viên</strong>
+            </div>
         </header>
 
+        <!-- STATISTICS -->
         <section class="stats">
+
             <div class="card">
-                <div class="card-icon"><i class="fas fa-box"></i></div>
+                <div class="card-icon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+
                 <div class="card-body">
-                    <h3>Tổng sản phẩm</h3>
-                    <p th:text="${totalProducts}"></p>
+                    <h3>Tổng học sinh</h3>
+                    <p th:text="${totalStudents != null ? totalStudents : 0}">0</p>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-icon"><i class="fas fa-users"></i></div>
+                <div class="card-icon">
+                    <i class="fas fa-chalkboard"></i>
+                </div>
+
                 <div class="card-body">
-                    <h3>Khách hàng</h3>
-                    <p th:text="${totalUsers}"></p>
+                    <h3>Tổng lớp học</h3>
+                    <p th:text="${totalClasses != null ? totalClasses : 0}">0</p>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-icon"><i class="fas fa-shopping-cart"></i></div>
+                <div class="card-icon">
+                    <i class="fas fa-bed"></i>
+                </div>
+
                 <div class="card-body">
-                    <h3>Đơn hàng</h3>
-                    <p th:text="${totalOrders}"></p>
+                    <h3>Đang nội trú</h3>
+                    <p th:text="${totalBoarding != null ? totalBoarding : 0}">0</p>
                 </div>
             </div>
+
         </section>
 
+        <!-- RECENT STUDENTS -->
         <section class="recent">
-            <h2>Sản phẩm gần đây</h2>
+
+            <h2>Học sinh mới cập nhật</h2>
+
             <table class="product-table">
+
                 <thead>
-                <tr><th>Hình</th><th>Tên</th><th>Giá</th><th>Tồn kho</th></tr>
+                <tr>
+                    <th>Mã học sinh</th>
+                    <th>Họ và tên</th>
+                    <th>Lớp</th>
+                    <th>Ngày sinh</th>
+                    <th>Trạng thái nội trú</th>
+                </tr>
                 </thead>
+
                 <tbody>
-                <tr th:if="${products == null or #lists.isEmpty(products)}">
-                    <td colspan="4" style="text-align:center; padding:20px;">Chưa có sản phẩm nào</td>
-                </tr>
-                <tr th:each="p : ${products}">
-                    <td>
-                        <img class="product-image"
-                             th:src="@{/uploads/{file}(file=${p.imageUrl})}">
+
+                <tr th:if="${students == null or #lists.isEmpty(students)}">
+                    <td colspan="5"
+                        style="text-align:center; padding:20px;">
+                        Chưa có dữ liệu học sinh
                     </td>
-                    <td th:text="${p.productName}">Tên SP</td>
-                    <td th:text="${#numbers.formatDecimal(p.price,0,0)} + ' VND'"></td>
-                    <td th:text="${p.quantity}"></td>
                 </tr>
+
+                <tr th:each="s : ${students}">
+                    <td th:text="${s.studentCode}"></td>
+
+                    <td th:text="${s.fullName}"></td>
+
+                    <td th:text="${s.className}"></td>
+
+                    <td th:text="${s.dateOfBirth != null
+                        ? #temporals.format(s.dateOfBirth, 'dd/MM/yyyy')
+                        : ''}">
+                    </td>
+
+                    <td>
+                        <span th:if="${s.boardingStatus == 'ACTIVE'}"
+                              style="color:green;">
+                            Đang nội trú
+                        </span>
+
+                        <span th:if="${s.boardingStatus == 'LEFT'}"
+                              style="color:red;">
+                            Đã rời nội trú
+                        </span>
+                    </td>
+                </tr>
+
                 </tbody>
+
             </table>
+
         </section>
+
     </main>
+
 </div>
+
 </body>
 </html>

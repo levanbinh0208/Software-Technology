@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Thông tin học sinh</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+            background: #f4f6f9;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            color: #2c3e50;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / 3;
+        }
+
+        label {
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input, select {
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .actions {
+            margin-top: 25px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button, .btn-back {
+            padding: 11px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .btn-save {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-back {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .error {
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2 th:text="${pageTitle}">Thông tin học sinh</h2>
+
+    <div class="error"
+         th:if="${error}"
+         th:text="${error}">
+    </div>
+
+    <form th:object="${student}"
+          th:action="${student.studentId == null}
+              ? @{/admin/students/create}
+              : @{/admin/students/update}"
+          method="post">
+
+        <input type="hidden" th:field="*{studentId}">
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Mã học sinh *</label>
+                <input type="text"
+                       th:field="*{studentCode}"
+                       placeholder="Ví dụ: HS011"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label>Họ và tên *</label>
+                <input type="text"
+                       th:field="*{fullName}"
+                       placeholder="Nhập họ và tên"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label>Giới tính</label>
+                <select th:field="*{gender}">
+                    <option value="">-- Chọn giới tính --</option>
+                    <option value="Nam">Nam</option>
+                    <option value="Nữ">Nữ</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Ngày sinh</label>
+                <input type="date" th:value="${student.dateOfBirth != null ? #temporals.format(student.dateOfBirth, 'yyyy-MM-dd') : ''}" name="dateOfBirth">
+            </div>
+
+            <div class="form-group">
+                <label>Lớp *</label>
+                <select th:field="*{classId}" required>
+                    <option value="">-- Chọn lớp --</option>
+                    <option th:each="clazz : ${classes}"
+                            th:value="${clazz.classId}"
+                            th:text="${clazz.className}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Trạng thái nội trú *</label>
+                <select th:field="*{boardingStatus}" required>
+                    <option value="ACTIVE">Đang nội trú</option>
+                    <option value="LEFT">Đã rời nội trú</option>
+                </select>
+            </div>
+
+            <div class="form-group full">
+                <label>Quê quán</label>
+                <input type="text"
+                       th:field="*{hometown}"
+                       placeholder="Nhập quê quán">
+            </div>
+
+            <div class="form-group">
+                <label>Họ tên phụ huynh</label>
+                <input type="text"
+                       th:field="*{parentName}"
+                       placeholder="Nhập họ tên phụ huynh">
+            </div>
+
+            <div class="form-group">
+                <label>Số điện thoại phụ huynh</label>
+                <input type="tel"
+                       th:field="*{parentPhone}"
+                       placeholder="Nhập số điện thoại">
+            </div>
+
+        </div>
+
+        <div class="actions">
+            <button type="submit" class="btn-save">
+                Lưu thông tin
+            </button>
+
+            <a th:href="@{/admin/students}" class="btn-back">
+                Quay lại
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>
