@@ -5,9 +5,7 @@
 
 <mapper namespace="com.example.residential_management.mapper.ClassMapper">
 
-    <resultMap id="ClassResultMap"
-               type="com.example.residential_management.entity.Classes">
-
+    <resultMap id="ClassResultMap" type="com.example.residential_management.entity.Classes">
         <id column="ClassId" property="classId"/>
         <result column="ClassName" property="className"/>
         <result column="Grade" property="grade"/>

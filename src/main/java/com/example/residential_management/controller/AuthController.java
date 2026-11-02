@@ -24,17 +24,11 @@ public class AuthController {
         this.authService = authService;
     }
 
-    // API đăng nhập và cấp JWT
     @PostMapping("/login")
-    public LoginResponse login(
-            @Valid @RequestBody LoginRequest request,
-            HttpServletResponse response) {
-
+    public LoginResponse login(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
         LoginResponse loginResponse = authService.login(request);
 
-        // Tạo cookie chứa JWT
-        ResponseCookie cookie = ResponseCookie
-                .from("accessToken", loginResponse.accessToken())
+        ResponseCookie cookie = ResponseCookie.from("accessToken", loginResponse.accessToken())
                 .httpOnly(true)
                 .secure(false)
                 .path("/")
@@ -42,11 +36,7 @@ public class AuthController {
                 .sameSite("Lax")
                 .build();
 
-        response.addHeader(
-                HttpHeaders.SET_COOKIE,
-                cookie.toString()
-        );
-
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return loginResponse;
     }
 }

@@ -3,7 +3,6 @@ package com.example.residential_management.service;
 
 import jakarta.mail.internet.MimeMessage;
 import com.example.residential_management.entity.User;
-//import com.example.phone_store.mapper.PasswordResetTokenMapper;
 import com.example.residential_management.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -18,9 +17,6 @@ public class UserService {
 
     @Autowired
     private UserMapper userMapper;
-
-//    @Autowired
-//    private PasswordResetTokenMapper tokenMapper;
 
     @Autowired
     private JavaMailSender mailSender;
@@ -41,13 +37,10 @@ public class UserService {
         return userMapper.deleteById(userId) > 0;
     }
 
-    // Đăng nhập
     public User login(String username, String password) {
-        if (username == null || username.trim().isEmpty()
-                || password == null || password.isEmpty()) {
+        if (username == null || username.trim().isEmpty() || password == null || password.isEmpty()) {
             return null;
         }
-
         return userMapper.login(username.trim(), password);
     }
 
@@ -56,9 +49,7 @@ public class UserService {
     }
 
     private String generateRandomPassword(int length) {
-        String chars =
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         SecureRandom random = new SecureRandom();
         StringBuilder password = new StringBuilder();
 
@@ -111,25 +102,6 @@ public class UserService {
         }
     }
 
-//    public boolean isValidResetToken(String token) {
-//        PasswordResetToken prt = tokenMapper.findByToken(token);
-//        return prt != null && !prt.isExpired();
-//    }
-//
-//    public boolean resetPasswordByToken(String token, String newPassword) {
-//        PasswordResetToken prt = tokenMapper.findByToken(token);
-//
-//        if (prt == null || prt.isExpired()) {
-//            return false;
-//        }
-//
-//        userMapper.updatePassword(
-//                prt.getUser().getUserId(), newPassword);
-//
-//        tokenMapper.deleteByToken(token);
-//
-//        return true;
-//    }
 
     public String checkDuplicate(String username, String email) {
         if (userMapper.findByUsername(username) != null) {

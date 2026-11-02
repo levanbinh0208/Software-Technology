@@ -12,44 +12,26 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(
-            JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http) throws Exception {
-
-        http
-                .csrf(csrf -> csrf.disable())
-
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(
-                                SessionCreationPolicy.IF_REQUIRED
-                        )
-                )
-
-                .authorizeHttpRequests(auth -> auth
-
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable()).sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)).authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-
                         .requestMatchers("/api/admin/**")
                         .hasAuthority("ADMIN")
-
                         .requestMatchers("/api/student/**")
                         .hasAnyAuthority("ADMIN", "STUDENT")
-
                         .requestMatchers("/api/**").authenticated()
-
                         .anyRequest().permitAll()
                 )
-
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
                 );
-
         return http.build();
     }
 }

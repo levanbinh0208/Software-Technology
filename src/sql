@@ -1,188 +1,261 @@
--- Tạo Database
-CREATE DATABASE PhoneStore;
+USE [master]
 GO
-
-USE PhoneStore;
+/****** Object:  Database [SoftwareTechnology]    Script Date: 11/2/2026 4:03:18 PM ******/
+CREATE DATABASE [SoftwareTechnology]
+ CONTAINMENT = NONE
+ ON  PRIMARY
+( NAME = N'Software Technology', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL17.MSSQLSERVER\MSSQL\DATA\Software Technology.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON
+( NAME = N'Software Technology_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL17.MSSQLSERVER\MSSQL\DATA\Software Technology_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+ WITH CATALOG_COLLATION = DATABASE_DEFAULT, LEDGER = OFF
 GO
-
--- =========================
--- USERS
--- =========================
-CREATE TABLE Users (
-    UserId INT IDENTITY(1,1) PRIMARY KEY,
-    FullName NVARCHAR(100) NOT NULL,
-    UserName VARCHAR(100) NOT NULL UNIQUE,
-    Email NVARCHAR(150) NOT NULL UNIQUE,
-    PasswordHash NVARCHAR(255) NOT NULL,
-    Phone NVARCHAR(20),
-    Address NVARCHAR(255),
-    RoleName NVARCHAR(20) NOT NULL DEFAULT 'CUSTOMER',
-    AvatarUrl NVARCHAR(500),
-    CreatedAt DATETIME NOT NULL DEFAULT GETDATE()
-);
+ALTER DATABASE [SoftwareTechnology] SET COMPATIBILITY_LEVEL = 170
 GO
-
--- =========================
--- CATEGORIES
--- =========================
-CREATE TABLE Categories (
-    CategoryId INT IDENTITY(1,1) PRIMARY KEY,
-    CategoryName NVARCHAR(100) NOT NULL,
-    Description NVARCHAR(500),
-    CreatedAt DATETIME NOT NULL DEFAULT GETDATE()
-);
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [SoftwareTechnology].[dbo].[sp_fulltext_database] @action = 'enable'
+end
 GO
-
--- =========================
--- PRODUCTS
--- =========================
-CREATE TABLE Products (
-    ProductId INT IDENTITY(1,1) PRIMARY KEY,
-    ProductName NVARCHAR(200) NOT NULL,
-    Description NVARCHAR(MAX),
-    Price DECIMAL(18,2) NOT NULL,
-    Quantity INT NOT NULL DEFAULT 0,
-    ImageUrl NVARCHAR(500),
-    CategoryId INT,
-    IsFeatured BIT NOT NULL DEFAULT 0,
-    IsDeleted BIT NOT NULL DEFAULT 0,
-    CreatedAt DATETIME NOT NULL DEFAULT GETDATE(),
-
-    CONSTRAINT FK_Product_Category
-        FOREIGN KEY (CategoryId)
-        REFERENCES Categories(CategoryId)
-);
+ALTER DATABASE [SoftwareTechnology] SET ANSI_NULL_DEFAULT OFF
 GO
-
--- =========================
--- CART ITEMS
--- =========================
-CREATE TABLE CartItems (
-    CartItemId INT IDENTITY(1,1) PRIMARY KEY,
-    UserId INT NOT NULL,
-    ProductId INT NOT NULL,
-    Quantity INT NOT NULL DEFAULT 1,
-
-    CONSTRAINT FK_CartItem_User
-        FOREIGN KEY (UserId)
-        REFERENCES Users(UserId)
-        ON DELETE CASCADE,
-
-    CONSTRAINT FK_CartItem_Product
-        FOREIGN KEY (ProductId)
-        REFERENCES Products(ProductId)
-        ON DELETE CASCADE,
-
-    CONSTRAINT UQ_CartItem_User_Product
-        UNIQUE(UserId, ProductId)
-);
+ALTER DATABASE [SoftwareTechnology] SET ANSI_NULLS OFF
 GO
-
--- =========================
--- ORDERS
--- =========================
-CREATE TABLE Orders (
-    OrderId INT IDENTITY(1,1) PRIMARY KEY,
-    UserId INT NOT NULL,
-    TotalAmount DECIMAL(18,2) NOT NULL,
-    Status NVARCHAR(30) NOT NULL DEFAULT 'PENDING',
-    OrderDate DATETIME NOT NULL DEFAULT GETDATE(),
-
-    ReceiverName NVARCHAR(100),
-    Phone NVARCHAR(20),
-    ShippingAddress NVARCHAR(255),
-    PaymentMethod NVARCHAR(50),
-
-    CONSTRAINT FK_Order_User
-        FOREIGN KEY (UserId)
-        REFERENCES Users(UserId)
-);
+ALTER DATABASE [SoftwareTechnology] SET ANSI_PADDING OFF
 GO
-
--- =========================
--- ORDER DETAILS
--- =========================
-CREATE TABLE OrderDetails (
-    OrderDetailId INT IDENTITY(1,1) PRIMARY KEY,
-    OrderId INT NOT NULL,
-    ProductId INT NOT NULL,
-    Quantity INT NOT NULL,
-    UnitPrice DECIMAL(18,2) NOT NULL,
-
-    CONSTRAINT FK_OrderDetail_Order
-        FOREIGN KEY (OrderId)
-        REFERENCES Orders(OrderId)
-        ON DELETE CASCADE,
-
-    CONSTRAINT FK_OrderDetail_Product
-        FOREIGN KEY (ProductId)
-REFERENCES Products(ProductId)
-);
+ALTER DATABASE [SoftwareTechnology] SET ANSI_WARNINGS OFF
 GO
-
--- =========================
--- PASSWORD RESET TOKENS
--- =========================
-CREATE TABLE PasswordResetTokens (
-    Id BIGINT IDENTITY(1,1) PRIMARY KEY,
-    Token VARCHAR(255) NOT NULL UNIQUE,
-    UserId INT NOT NULL,
-    ExpiryDate DATETIME2 NOT NULL,
-
-    CONSTRAINT FK_PasswordResetToken_User
-        FOREIGN KEY (UserId)
-        REFERENCES Users(UserId)
-        ON DELETE CASCADE
-);
+ALTER DATABASE [SoftwareTechnology] SET ARITHABORT OFF
 GO
-
--- =========================
--- DỮ LIỆU MẪU
--- =========================
-
-INSERT INTO Categories(CategoryName, Description)
-VALUES
-(N'iPhone', N'Điện thoại Apple'),
-(N'Samsung', N'Điện thoại Samsung'),
-(N'Xiaomi', N'Điện thoại Xiaomi');
+ALTER DATABASE [SoftwareTechnology] SET AUTO_CLOSE OFF
 GO
-
-INSERT INTO Products
+ALTER DATABASE [SoftwareTechnology] SET AUTO_SHRINK OFF
+GO
+ALTER DATABASE [SoftwareTechnology] SET AUTO_UPDATE_STATISTICS ON
+GO
+ALTER DATABASE [SoftwareTechnology] SET CURSOR_CLOSE_ON_COMMIT OFF
+GO
+ALTER DATABASE [SoftwareTechnology] SET CURSOR_DEFAULT  GLOBAL
+GO
+ALTER DATABASE [SoftwareTechnology] SET CONCAT_NULL_YIELDS_NULL OFF
+GO
+ALTER DATABASE [SoftwareTechnology] SET NUMERIC_ROUNDABORT OFF
+GO
+ALTER DATABASE [SoftwareTechnology] SET QUOTED_IDENTIFIER OFF
+GO
+ALTER DATABASE [SoftwareTechnology] SET RECURSIVE_TRIGGERS OFF
+GO
+ALTER DATABASE [SoftwareTechnology] SET  DISABLE_BROKER
+GO
+ALTER DATABASE [SoftwareTechnology] SET AUTO_UPDATE_STATISTICS_ASYNC OFF
+GO
+ALTER DATABASE [SoftwareTechnology] SET DATE_CORRELATION_OPTIMIZATION OFF
+GO
+ALTER DATABASE [SoftwareTechnology] SET TRUSTWORTHY OFF
+GO
+ALTER DATABASE [SoftwareTechnology] SET ALLOW_SNAPSHOT_ISOLATION OFF
+GO
+ALTER DATABASE [SoftwareTechnology] SET PARAMETERIZATION SIMPLE
+GO
+ALTER DATABASE [SoftwareTechnology] SET READ_COMMITTED_SNAPSHOT OFF
+GO
+ALTER DATABASE [SoftwareTechnology] SET HONOR_BROKER_PRIORITY OFF
+GO
+ALTER DATABASE [SoftwareTechnology] SET RECOVERY FULL
+GO
+ALTER DATABASE [SoftwareTechnology] SET  MULTI_USER
+GO
+ALTER DATABASE [SoftwareTechnology] SET PAGE_VERIFY CHECKSUM
+GO
+ALTER DATABASE [SoftwareTechnology] SET DB_CHAINING OFF
+GO
+ALTER DATABASE [SoftwareTechnology] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF )
+GO
+ALTER DATABASE [SoftwareTechnology] SET TARGET_RECOVERY_TIME = 60 SECONDS
+GO
+ALTER DATABASE [SoftwareTechnology] SET DELAYED_DURABILITY = DISABLED
+GO
+ALTER DATABASE [SoftwareTechnology] SET OPTIMIZED_LOCKING = OFF
+GO
+ALTER DATABASE [SoftwareTechnology] SET ACCELERATED_DATABASE_RECOVERY = OFF
+GO
+EXEC sys.sp_db_vardecimal_storage_format N'SoftwareTechnology', N'ON'
+GO
+ALTER DATABASE [SoftwareTechnology] SET QUERY_STORE = ON
+GO
+ALTER DATABASE [SoftwareTechnology] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP_POLICY = (STALE_QUERY_THRESHOLD_DAYS = 30), DATA_FLUSH_INTERVAL_SECONDS = 900, INTERVAL_LENGTH_MINUTES = 60, MAX_STORAGE_SIZE_MB = 1000, QUERY_CAPTURE_MODE = AUTO, SIZE_BASED_CLEANUP_MODE = AUTO, MAX_PLANS_PER_QUERY = 200, WAIT_STATS_CAPTURE_MODE = ON)
+GO
+USE [SoftwareTechnology]
+GO
+/****** Object:  Table [dbo].[Classes]    Script Date: 11/2/2026 4:03:18 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Classes](
+	[ClassId] [int] IDENTITY(1,1) NOT NULL,
+	[ClassName] [nvarchar](30) NOT NULL,
+	[Grade] [int] NULL,
+	[Description] [nvarchar](255) NULL,
+PRIMARY KEY CLUSTERED
 (
-    ProductName,
-    Description,
-    Price,
-    Quantity,
-    ImageUrl,
-    CategoryId,
-    IsFeatured
-)
-VALUES
+	[ClassId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Roles]    Script Date: 11/2/2026 4:03:18 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Roles](
+	[RoleId] [int] IDENTITY(1,1) NOT NULL,
+	[RoleName] [nvarchar](50) NOT NULL,
+	[Description] [nvarchar](255) NULL,
+PRIMARY KEY CLUSTERED
 (
-    N'iPhone 15 Pro Max',
-    N'256GB Titanium',
-    32990000,
-    20,
-    'iphone15promax.jpg',
-    1,
-    1
-),
+	[RoleId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Students]    Script Date: 11/2/2026 4:03:18 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Students](
+	[StudentId] [bigint] IDENTITY(1,1) NOT NULL,
+	[StudentCode] [varchar](20) NOT NULL,
+	[FullName] [nvarchar](100) NOT NULL,
+	[Gender] [nvarchar](10) NULL,
+	[DateOfBirth] [date] NULL,
+	[ClassId] [int] NOT NULL,
+	[Hometown] [nvarchar](200) NULL,
+	[ParentName] [nvarchar](100) NULL,
+	[ParentPhone] [varchar](15) NULL,
+	[BoardingStatus] [varchar](20) NOT NULL,
+	[UserId] [bigint] NULL,
+	[CreatedAt] [datetime2](7) NULL,
+	[UpdatedAt] [datetime2](7) NULL,
+PRIMARY KEY CLUSTERED
 (
-    N'Samsung Galaxy S24 Ultra',
-    N'512GB',
-    28990000,
-    15,
-    's24ultra.jpg',
-    2,
-    1
-),
+	[StudentId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Users]    Script Date: 11/2/2026 4:03:18 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Users](
+	[UserId] [bigint] IDENTITY(1,1) NOT NULL,
+	[Username] [varchar](50) NOT NULL,
+	[Password] [varchar](255) NOT NULL,
+	[FullName] [nvarchar](100) NULL,
+	[Email] [varchar](100) NULL,
+	[RoleId] [int] NOT NULL,
+	[IsActive] [bit] NOT NULL,
+	[CreatedAt] [datetime2](7) NULL,
+PRIMARY KEY CLUSTERED
 (
-    N'Xiaomi 14',
-    N'12GB RAM - 256GB',
-    17990000,
-    30,
-    'xiaomi14.jpg',
-    3,
-    0
-);
+	[UserId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET IDENTITY_INSERT [dbo].[Classes] ON
+
+INSERT [dbo].[Classes] ([ClassId], [ClassName], [Grade], [Description]) VALUES (1, N'10A1', 10, NULL)
+INSERT [dbo].[Classes] ([ClassId], [ClassName], [Grade], [Description]) VALUES (2, N'10A2', 10, NULL)
+INSERT [dbo].[Classes] ([ClassId], [ClassName], [Grade], [Description]) VALUES (3, N'11A1', 11, NULL)
+INSERT [dbo].[Classes] ([ClassId], [ClassName], [Grade], [Description]) VALUES (4, N'12A1', 12, NULL)
+SET IDENTITY_INSERT [dbo].[Classes] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Roles] ON
+
+INSERT [dbo].[Roles] ([RoleId], [RoleName], [Description]) VALUES (1, N'ADMIN', N'Người quản lý nội trú')
+INSERT [dbo].[Roles] ([RoleId], [RoleName], [Description]) VALUES (2, N'STUDENT', N'Học sinh nội trú')
+SET IDENTITY_INSERT [dbo].[Roles] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Students] ON
+
+INSERT [dbo].[Students] ([StudentId], [StudentCode], [FullName], [Gender], [DateOfBirth], [ClassId], [Hometown], [ParentName], [ParentPhone], [BoardingStatus], [UserId], [CreatedAt], [UpdatedAt]) VALUES (1, N'HS001', N'Nguyễn Văn An', N'Nam', CAST(N'2009-03-15' AS Date), 1, N'Thanh Hóa', N'Nguyễn Văn Bình', N'0912345678', N'ACTIVE', NULL, CAST(N'2026-11-02T11:10:33.1608166' AS DateTime2), NULL)
+INSERT [dbo].[Students] ([StudentId], [StudentCode], [FullName], [Gender], [DateOfBirth], [ClassId], [Hometown], [ParentName], [ParentPhone], [BoardingStatus], [UserId], [CreatedAt], [UpdatedAt]) VALUES (2, N'HS002', N'Trần Thị Mai', N'Nữ', CAST(N'2009-07-20' AS Date), 1, N'Nghệ An', N'Trần Văn Hùng', N'0912345679', N'ACTIVE', NULL, CAST(N'2026-11-02T11:10:33.1608166' AS DateTime2), NULL)
+INSERT [dbo].[Students] ([StudentId], [StudentCode], [FullName], [Gender], [DateOfBirth], [ClassId], [Hometown], [ParentName], [ParentPhone], [BoardingStatus], [UserId], [CreatedAt], [UpdatedAt]) VALUES (3, N'HS003', N'Lê Hoàng Nam', N'Nam', CAST(N'2009-11-08' AS Date), 2, N'Hà Tĩnh', N'Lê Văn Thành', N'0912345680', N'ACTIVE', NULL, CAST(N'2026-11-02T11:10:33.1608166' AS DateTime2), NULL)
+INSERT [dbo].[Students] ([StudentId], [StudentCode], [FullName], [Gender], [DateOfBirth], [ClassId], [Hometown], [ParentName], [ParentPhone], [BoardingStatus], [UserId], [CreatedAt], [UpdatedAt]) VALUES (4, N'HS004', N'Phạm Thu Hà', N'Nữ', CAST(N'2009-05-12' AS Date), 2, N'Nam Định', N'Phạm Văn Hải', N'0912345681', N'ACTIVE', NULL, CAST(N'2026-11-02T11:10:33.1608166' AS DateTime2), NULL)
+INSERT [dbo].[Students] ([StudentId], [StudentCode], [FullName], [Gender], [DateOfBirth], [ClassId], [Hometown], [ParentName], [ParentPhone], [BoardingStatus], [UserId], [CreatedAt], [UpdatedAt]) VALUES (5, N'HS005', N'Hoàng Đức Minh', N'Nam', CAST(N'2008-02-25' AS Date), 3, N'Ninh Bình', N'Hoàng Văn Long', N'0912345682', N'ACTIVE', NULL, CAST(N'2026-11-02T11:10:33.1608166' AS DateTime2), NULL)
+INSERT [dbo].[Students] ([StudentId], [StudentCode], [FullName], [Gender], [DateOfBirth], [ClassId], [Hometown], [ParentName], [ParentPhone], [BoardingStatus], [UserId], [CreatedAt], [UpdatedAt]) VALUES (6, N'HS006', N'Đỗ Ngọc Lan', N'Nữ', CAST(N'2008-09-17' AS Date), 3, N'Hà Nội', N'Đỗ Văn Tuấn', N'0912345683', N'ACTIVE', NULL, CAST(N'2026-11-02T11:10:33.1608166' AS DateTime2), NULL)
+INSERT [dbo].[Students] ([StudentId], [StudentCode], [FullName], [Gender], [DateOfBirth], [ClassId], [Hometown], [ParentName], [ParentPhone], [BoardingStatus], [UserId], [CreatedAt], [UpdatedAt]) VALUES (7, N'HS007', N'Vũ Quang Huy', N'Nam', CAST(N'2008-12-03' AS Date), 3, N'Thanh Hóa', N'Vũ Văn Sơn', N'0912345684', N'LEFT', NULL, CAST(N'2026-11-02T11:10:33.1608166' AS DateTime2), NULL)
+INSERT [dbo].[Students] ([StudentId], [StudentCode], [FullName], [Gender], [DateOfBirth], [ClassId], [Hometown], [ParentName], [ParentPhone], [BoardingStatus], [UserId], [CreatedAt], [UpdatedAt]) VALUES (8, N'HS008', N'Bùi Khánh Linh', N'Nữ', CAST(N'2007-04-22' AS Date), 4, N'Nghệ An', N'Bùi Văn Nam', N'0912345685', N'ACTIVE', NULL, CAST(N'2026-11-02T11:10:33.1608166' AS DateTime2), NULL)
+INSERT [dbo].[Students] ([StudentId], [StudentCode], [FullName], [Gender], [DateOfBirth], [ClassId], [Hometown], [ParentName], [ParentPhone], [BoardingStatus], [UserId], [CreatedAt], [UpdatedAt]) VALUES (9, N'HS009', N'Ngô Minh Tuấn', N'Nam', CAST(N'2007-08-10' AS Date), 4, N'Hà Tĩnh', N'Ngô Văn Hòa', N'0912345686', N'LEFT', NULL, CAST(N'2026-11-02T11:10:33.1608166' AS DateTime2), CAST(N'2026-11-02T14:33:12.4123848' AS DateTime2))
+INSERT [dbo].[Students] ([StudentId], [StudentCode], [FullName], [Gender], [DateOfBirth], [ClassId], [Hometown], [ParentName], [ParentPhone], [BoardingStatus], [UserId], [CreatedAt], [UpdatedAt]) VALUES (11, N'HS0011', N'Quỳnh Liên', N'Nữ', CAST(N'2026-11-04' AS Date), 1, N'Hà Tĩnh', N'Ngô Văn Hòa', N'0912345686', N'LEFT', NULL, CAST(N'2026-11-02T11:40:57.0121765' AS DateTime2), CAST(N'2026-11-02T14:33:08.6261317' AS DateTime2))
+SET IDENTITY_INSERT [dbo].[Students] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Users] ON
+
+INSERT [dbo].[Users] ([UserId], [Username], [Password], [FullName], [Email], [RoleId], [IsActive], [CreatedAt]) VALUES (1, N'admin', N'123456', N'Quản trị viên', N'admin@gmail.com', 1, 1, CAST(N'2026-11-02T10:44:20.5792768' AS DateTime2))
+INSERT [dbo].[Users] ([UserId], [Username], [Password], [FullName], [Email], [RoleId], [IsActive], [CreatedAt]) VALUES (2, N'HS001', N'123456', N'Nguyễn Văn A', N'hs001@gmail.com', 2, 1, CAST(N'2026-11-02T15:23:39.1218824' AS DateTime2))
+SET IDENTITY_INSERT [dbo].[Users] OFF
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [UQ__Classes__F8BF561B601A0BBE]    Script Date: 11/2/2026 4:03:18 PM ******/
+ALTER TABLE [dbo].[Classes] ADD UNIQUE NONCLUSTERED
+(
+	[ClassName] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [UQ__Roles__8A2B616010F68E4A]    Script Date: 11/2/2026 4:03:18 PM ******/
+ALTER TABLE [dbo].[Roles] ADD UNIQUE NONCLUSTERED
+(
+	[RoleName] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [UQ__Students__1FC886042C1FD70A]    Script Date: 11/2/2026 4:03:18 PM ******/
+ALTER TABLE [dbo].[Students] ADD UNIQUE NONCLUSTERED
+(
+	[StudentCode] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [UQ__Users__536C85E41668B221]    Script Date: 11/2/2026 4:03:18 PM ******/
+ALTER TABLE [dbo].[Users] ADD UNIQUE NONCLUSTERED
+(
+	[Username] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Students] ADD  DEFAULT ('ACTIVE') FOR [BoardingStatus]
+GO
+ALTER TABLE [dbo].[Students] ADD  DEFAULT (sysdatetime()) FOR [CreatedAt]
+GO
+ALTER TABLE [dbo].[Users] ADD  DEFAULT ((1)) FOR [IsActive]
+GO
+ALTER TABLE [dbo].[Users] ADD  DEFAULT (sysdatetime()) FOR [CreatedAt]
+GO
+ALTER TABLE [dbo].[Students]  WITH CHECK ADD  CONSTRAINT [FK_Students_Classes] FOREIGN KEY([ClassId])
+REFERENCES [dbo].[Classes] ([ClassId])
+GO
+ALTER TABLE [dbo].[Students] CHECK CONSTRAINT [FK_Students_Classes]
+GO
+ALTER TABLE [dbo].[Students]  WITH CHECK ADD  CONSTRAINT [FK_Students_Users] FOREIGN KEY([UserId])
+REFERENCES [dbo].[Users] ([UserId])
+GO
+ALTER TABLE [dbo].[Students] CHECK CONSTRAINT [FK_Students_Users]
+GO
+ALTER TABLE [dbo].[Users]  WITH CHECK ADD  CONSTRAINT [FK_Users_Roles] FOREIGN KEY([RoleId])
+REFERENCES [dbo].[Roles] ([RoleId])
+GO
+ALTER TABLE [dbo].[Users] CHECK CONSTRAINT [FK_Users_Roles]
+GO
+ALTER TABLE [dbo].[Students]  WITH CHECK ADD  CONSTRAINT [CK_Students_BoardingStatus] CHECK  (([BoardingStatus]='LEFT' OR [BoardingStatus]='ACTIVE'))
+GO
+ALTER TABLE [dbo].[Students] CHECK CONSTRAINT [CK_Students_BoardingStatus]
+GO
+USE [master]
+GO
+ALTER DATABASE [SoftwareTechnology] SET  READ_WRITE
 GO

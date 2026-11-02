@@ -5,9 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
-@EnableAsync          // ← cho phép @Async hoạt động (gửi email không block request)
-public class PhoneStoreApplication {
+@EnableAsync
+public class SoftWareTechnologyApplication {
     public static void main(String[] args) {
-        SpringApplication.run(PhoneStoreApplication.class, args);
+        SpringApplication.run(SoftWareTechnologyApplication.class, args);
     }
 }

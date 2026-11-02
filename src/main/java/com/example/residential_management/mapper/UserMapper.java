@@ -18,19 +18,13 @@ public interface UserMapper {
 
     List<User> findAll();
 
-    int updateRole(
-            @Param("userId") Long userId,
-            @Param("roleName") String roleName);
+    int updateRole(@Param("userId") Long userId, @Param("roleName") String roleName);
 
     int deleteById(@Param("userId") Long userId);
 
-    User login(
-            @Param("username") String username,
-            @Param("password") String password);
+    User login(@Param("username") String username, @Param("password") String password);
 
     User findByEmail(@Param("email") String email);
 
-    int updatePassword(
-            @Param("userId") Long userId,
-            @Param("password") String password);
+    int updatePassword(@Param("userId") Long userId, @Param("password") String password);
 }

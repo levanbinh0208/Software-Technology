@@ -5,9 +5,7 @@
 
 <mapper namespace="com.example.residential_management.mapper.StudentMapper">
 
-    <resultMap id="StudentResultMap"
-               type="com.example.residential_management.entity.Student">
-
+    <resultMap id="StudentResultMap"  type="com.example.residential_management.entity.Student">
         <id column="StudentId" property="studentId"/>
         <result column="StudentCode" property="studentCode"/>
         <result column="FullName" property="fullName"/>
@@ -22,12 +20,9 @@
         <result column="UserId" property="userId"/>
         <result column="CreatedAt" property="createdAt"/>
         <result column="UpdatedAt" property="updatedAt"/>
-
     </resultMap>
 
-    <!-- Danh sách học sinh và bộ lọc -->
     <select id="findAll" resultMap="StudentResultMap">
-
         SELECT
         s.StudentId,
         s.StudentCode,
@@ -45,7 +40,6 @@
         s.UpdatedAt
         FROM Students s
         INNER JOIN Classes c ON s.ClassId = c.ClassId
-
         <where>
             <if test="keyword != null and keyword != ''">
                 AND (
@@ -53,21 +47,16 @@
                 OR s.FullName LIKE N'%' + #{keyword} + '%'
                 )
             </if>
-
             <if test="classId != null">
                 AND s.ClassId = #{classId}
             </if>
-
             <if test="boardingStatus != null and boardingStatus != ''">
                 AND s.BoardingStatus = #{boardingStatus}
             </if>
         </where>
-
         ORDER BY s.StudentId DESC
-
     </select>
 
-    <!-- Chi tiết học sinh -->
     <select id="findById" resultMap="StudentResultMap">
         SELECT
             s.StudentId,
@@ -89,26 +78,17 @@
         WHERE s.StudentId = #{studentId}
     </select>
 
-    <!-- Kiểm tra trùng mã học sinh -->
     <select id="existsByStudentCode" resultType="int">
-
         SELECT COUNT(1)
         FROM Students
         WHERE StudentCode = #{studentCode}
-
         <if test="studentId != null">
             AND StudentId != #{studentId}
         </if>
-
     </select>
 
-    <!-- Thêm học sinh -->
-    <insert id="insert"
-            parameterType="com.example.residential_management.entity.Student"
-            useGeneratedKeys="true"
-            keyProperty="studentId"
-            keyColumn="StudentId">
-
+    <insert id="insert" parameterType="com.example.residential_management.entity.Student" useGeneratedKeys="true"
+            keyProperty="studentId" keyColumn="StudentId">
         INSERT INTO Students (
             StudentCode,
             FullName,
@@ -134,9 +114,7 @@
 
     </insert>
 
-    <!-- Cập nhật học sinh -->
     <update id="update" parameterType="com.example.residential_management.entity.Student">
-
         UPDATE Students
         SET
             StudentCode = #{studentCode},
@@ -150,34 +128,25 @@
             BoardingStatus = #{boardingStatus},
             UpdatedAt = SYSDATETIME()
         WHERE StudentId = #{studentId}
-
     </update>
 
-    <!-- Xóa học sinh -->
     <delete id="deleteById">
         DELETE FROM Students
         WHERE StudentId = #{studentId}
     </delete>
 
-
-    <!-- 5 học sinh mới nhất trên Dashboard -->
-    <select id="findRecentStudents"
-            resultMap="StudentResultMap">
-
+    <select id="findRecentStudents" resultMap="StudentResultMap">
         SELECT *
         FROM Students s
-                 INNER JOIN Classes c ON s.ClassId = c.ClassId
+        INNER JOIN Classes c ON s.ClassId = c.ClassId
         ORDER BY s.StudentId DESC
-
     </select>
 
-    <!-- Tổng số học sinh -->
     <select id="countAll" resultType="int">
         SELECT COUNT(*)
         FROM Students
     </select>
 
-    <!-- Tổng số học sinh theo trạng thái -->
     <select id="countByBoardingStatus" resultType="int">
         SELECT COUNT(*)
         FROM Students

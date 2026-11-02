@@ -27,22 +27,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
-
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = null;
-
-        // Ưu tiên đọc JWT từ Authorization header
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
         }
 
-        // Nếu không có header thì đọc JWT từ cookie
         if (token == null && request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
                 if ("accessToken".equals(cookie.getName())) {
@@ -52,7 +44,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
-        // Không tìm thấy token
         if (token == null || token.isBlank()) {
             filterChain.doFilter(request, response);
             return;
@@ -66,23 +57,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                    SimpleGrantedAuthority authority =
-                            new SimpleGrantedAuthority(role);
-
-                    UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(
-                                    username,
-                                    null,
-                                    List.of(authority)
-                            );
-
-                    authentication.setDetails(
-                            new WebAuthenticationDetailsSource()
-                                    .buildDetails(request)
-                    );
-
-                    SecurityContextHolder.getContext()
-                            .setAuthentication(authentication);
+                    SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, List.of(authority));
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             } else {
                 SecurityContextHolder.clearContext();
@@ -91,7 +69,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             SecurityContextHolder.clearContext();
         }
-
         filterChain.doFilter(request, response);
     }
 }

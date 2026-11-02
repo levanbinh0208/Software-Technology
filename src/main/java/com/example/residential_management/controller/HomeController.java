@@ -17,15 +17,10 @@ public class HomeController {
     @Autowired
     private StudentMapper studentMapper;
 
-    // ==========================================
-    // TRANG CHỦ
-    // ==========================================
-
     @GetMapping({"/", "/home"})
     public String showHome(Authentication authentication) {
 
-        if (authentication == null
-                || !authentication.isAuthenticated()) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/login";
         }
 
@@ -41,17 +36,9 @@ public class HomeController {
         return "redirect:/admin/dashboard";
     }
 
-    // ==========================================
-    // ADMIN DASHBOARD
-    // ==========================================
-
     @GetMapping("/admin/dashboard")
-    public String showAdminDashboard(
-            Authentication authentication,
-            Model model) {
-
-        if (authentication == null
-                || !authentication.isAuthenticated()) {
+    public String showAdminDashboard(Authentication authentication, Model model) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/login";
         }
 
@@ -64,15 +51,10 @@ public class HomeController {
             return "redirect:/login";
         }
 
-        // Tên tài khoản
         model.addAttribute("fullName", authentication.getName());
 
-        // Danh sách 5 học sinh mới nhất
-        List<Student> students =
-                studentMapper.findRecentStudents();
-
+        List<Student> students = studentMapper.findRecentStudents();
         model.addAttribute("students", students);
-
         return "admin/dashboard";
     }
 }

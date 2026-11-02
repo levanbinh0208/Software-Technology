@@ -17,25 +17,16 @@ public class JwtService {
     private final SecretKey secretKey;
     private final long expirationMs;
 
-    public JwtService(
-            @Value("${app.jwt.secret}") String secret,
-            @Value("${app.jwt.expiration-ms:3600000}") long expirationMs) {
-
-        this.secretKey = Keys.hmacShaKeyFor(
-                Decoders.BASE64.decode(secret)
-        );
-
+    public JwtService(@Value("${app.jwt.secret}") String secret, @Value("${app.jwt.expiration-ms:3600000}") long expirationMs) {
+        this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
         this.expirationMs = expirationMs;
     }
 
-    // Tạo JWT cho người dùng
     public String generateToken(User user) {
-
         Date now = new Date();
         Date expiration = new Date(now.getTime() + expirationMs);
 
-        return Jwts.builder()
-                .subject(user.getUserName())
+        return Jwts.builder().subject(user.getUserName())
                 .claim("userId", user.getUserId())
                 .claim("fullName", user.getFullName())
                 .claim("role", user.getRoleName())
@@ -45,9 +36,7 @@ public class JwtService {
                 .compact();
     }
 
-    // Kiểm tra và đọc thông tin từ Token
     public String extractUsername(String token) {
-
         return Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
@@ -56,7 +45,6 @@ public class JwtService {
                 .getSubject();
     }
 
-    // Kiểm tra Token hợp lệ
     public boolean isTokenValid(String token) {
 
         try {

@@ -28,8 +28,6 @@ public class Student {
 
     private String parentPhone;
 
-    // ACTIVE: Đang nội trú
-    // LEFT: Đã ra nội trú
     private String boardingStatus;
 
     private Long userId;
